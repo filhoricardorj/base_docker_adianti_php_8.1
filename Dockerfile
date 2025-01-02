@@ -28,7 +28,9 @@ RUN apt -y install curl git-core php8.1-curl php8.1-dom php8.1-xml php8.1-zip \
 
 RUN a2dismod mpm_event mpm_worker
 
-RUN a2enmod mpm_prefork rewrite php8.1 authnz_ldap ldap
+RUN a2enmod mpm_prefork rewrite php8.1 authnz_ldap ldap ssl
+
+RUN a2ensite default-ssl
 
 RUN LANG="en_US.UTF-8" rpl "AllowOverride None" "AllowOverride All" /etc/apache2/apache2.conf
 

@@ -1,20 +1,23 @@
 # docker compose up --build -d
 
-version: '3.8'
 services:
   webserver:
     build:
       context: .
     image: adianti_server:debian-11_php8.1
-    restart: on-failure
+    restart: unless-stopped
     ports:
       - "80:80"
+      - "443:443"
     networks:
       - network
     volumes:
       - ./php-prod.ini:/etc/php/8.1/apache2/php.ini
       - ./html:/var/www/html
       - ./logs/apache2:/var/log/apache2
+      - ./ssl-cert.crt:/etc/ssl/certs/ssl-cert-snakeoil.pem
+      - ./ssl-cert.key:/etc/ssl/private/ssl-cert-snakeoil.key
+      - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
     depends_on:
       - mariadb
     extra_hosts:
@@ -22,7 +25,7 @@ services:
 
   mariadb:
     image: mariadb:10.11
-    restart: on-failure
+    restart: unless-stopped
     environment:
       #MYSQL_ALLOW_EMPTY_PASSWORD: 1
       MYSQL_ROOT_PASSWORD: PASSWORD
