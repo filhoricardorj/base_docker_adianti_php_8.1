@@ -28,6 +28,8 @@ RUN apt -y install curl git-core php8.1-curl php8.1-dom php8.1-xml php8.1-zip \
 
 RUN a2dismod mpm_event mpm_worker
 
+RUN LANG="en_US.UTF-8" rpl "SSLProtocol all -SSLv3" "SSLProtocol all -SSLv3 -TLSv1 -TLSv1.1" /etc/apache2/mods-available/ssl.conf
+
 RUN a2enmod mpm_prefork rewrite php8.1 authnz_ldap ldap ssl
 
 RUN a2ensite default-ssl
